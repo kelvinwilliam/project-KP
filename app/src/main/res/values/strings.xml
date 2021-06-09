@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">dompet</string>
+    <string name="income">%1$s</string>
+    <string name="expense">%1$s</string>
+</resources>
