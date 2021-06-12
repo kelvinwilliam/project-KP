@@ -56,8 +56,7 @@ public class Profile extends AppCompatActivity {
                             String cat = mJsonObject.getString("sumCat");
                             binding.pName.setText(name);
                             binding.pEmail.setText(email);
-                            binding.pTransaction.setText(trans);
-                            binding.pCategory.setText(cat);
+                            binding.pJoinSince.setText(id.substring(0,4) + " - " + id.substring(4,6) + " - " + id.substring(6,8));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

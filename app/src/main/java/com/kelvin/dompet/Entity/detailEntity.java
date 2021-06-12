@@ -1,13 +1,15 @@
 package com.kelvin.dompet.Entity;
 
 public class detailEntity {
+    private int tId;
     private String date;
     private String category;
     private int ammount;
     private String description;
     private String photo;
 
-    public detailEntity(String date, String category, int ammount, String description, String photo) {
+    public detailEntity(int tId, String date, String category, int ammount, String description, String photo) {
+        this.tId = tId;
         this.date = date;
         this.category = category;
         this.ammount = ammount;
@@ -16,6 +18,14 @@ public class detailEntity {
     }
 
     public detailEntity() {
+    }
+
+    public int gettId() {
+        return tId;
+    }
+
+    public void settId(int tId) {
+        this.tId = tId;
     }
 
     public String getDate() {

@@ -62,6 +62,15 @@ public class detailAdapter extends RecyclerView.Adapter<detailAdapter.detailView
                     }
                 }
             });
+            
+            binding.btdelete.setOnClickListener(v -> {
+                if(listener!=null){
+                    int position = getAdapterPosition();
+                    if(position!=RecyclerView.NO_POSITION){
+                        listener.onDeleteClick(position);
+                    }
+                }
+            });
         }
         
 
@@ -79,6 +88,8 @@ public class detailAdapter extends RecyclerView.Adapter<detailAdapter.detailView
         void detailDataClicked(detailEntity detail);
 
         void onEditClick(int position);
+
+        void onDeleteClick(int position);
     }
 
 

@@ -81,30 +81,15 @@
             android:text="Change Password" />
 
         <TextView
-            android:id="@+id/textView12"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:gravity="center"
-            android:text="Number of Transaction" />
-
-        <TextView
-            android:id="@+id/pTransaction"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:textSize="20sp" />
-
-        <TextView
             android:id="@+id/textView13"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:gravity="center"
-            android:text="Number of Categories" />
+            android:text="Join Since" />
 
         <TextView
-            android:id="@+id/pCategory"
+            android:id="@+id/pJoinSince"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="25dp"
