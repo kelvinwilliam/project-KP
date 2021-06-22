@@ -519,7 +519,11 @@ public class Transaction extends AppCompatActivity {
             queue.add(stringRequest);
         } else {
             transPhoto="";
-            handletrans();
+            if(tId.equalsIgnoreCase("kosong")) {
+                handletrans();
+            } else {
+                handleedit(tId);
+            }
         }
 
         return fileName[0];
@@ -531,7 +535,7 @@ public class Transaction extends AppCompatActivity {
             addTransaction();
         }
         else {
-            binding.ammount.setText(tAmount);
+            binding.ammount.setText(String.valueOf(Math.abs(Integer.valueOf(tAmount))));
             binding.showdate.setText(tDate);
             binding.dsc.setText(tDescription);
             catName = tbCategory_id;
@@ -622,7 +626,8 @@ public class Transaction extends AppCompatActivity {
                                     binding.category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                         @Override
                                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                            category = (Category) parent.getItemAtPosition(getIndex(arrayList, catName));
+                                            category = (Category) parent.getItemAtPosition(position);
+                                            System.out.println(category.getId());
                                         }
                                         @Override
                                         public void onNothingSelected(AdapterView<?> parent) {
@@ -641,12 +646,13 @@ public class Transaction extends AppCompatActivity {
 
     }
 
-    public int getIndex(ArrayList<Category> spinner,String s){
-        for(int i=0; i<spinner.size(); i++){
-            if(spinner.get(i).getId().equalsIgnoreCase(s)){
-                return i;
-            }
-        }
-        return 0;
-    }
+//    public int getIndex(ArrayList<Category> spinner,String s){
+//        for(int i=0; i<spinner.size(); i++){
+//            if(spinner.get(i).getId().equalsIgnoreCase(s)){
+//                System.out.println(spinner.get(i).getId());
+//                return i;
+//            }
+//        }
+//        return 0;
+//    }
 }

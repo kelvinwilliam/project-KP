@@ -51,6 +51,7 @@ public class History extends AppCompatActivity {
     String tId,tAmount,tDate,tDescription,tPhoto,tbCategory_id;
     Bundle bundle = new Bundle();
     String From,Until;
+    boolean action;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -294,44 +295,43 @@ public class History extends AppCompatActivity {
     }
 
     private void callDelete(String transID){
-        Handler handler = new Handler(Looper.getMainLooper());
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-                String[] field = new String[2];
-                field[0] = "userId";
-                field[1] = "transDelId";
 
-                //Creating array for data
-                String[] data = new String[2];
-                data[0] = id;
-                data[1] = transID;
+            Handler handler = new Handler(Looper.getMainLooper());
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    String[] field = new String[2];
+                    field[0] = "userId";
+                    field[1] = "transDelId";
 
-                PutData putData = new PutData("http://cashflow.it.maranatha.edu/services/service_delete_transaction.php", "POST", field, data);
-                if (putData.startPut()) {
-                    if (putData.onComplete()) {
-                        String result = putData.getResult();
-                        String ErrCode = "1";
-                        String ErrMsg = "Error Connect to Internet";
-                        JSONArray mJsonArray = null;
-                        try {
-                            mJsonArray = new JSONArray(result);
-                            JSONObject mJsonObject = mJsonArray.getJSONObject(0);
-                            ErrCode = mJsonObject.getString("ErrCode");
-                            ErrMsg = mJsonObject.getString("ErrMsg");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                    //Creating array for data
+                    String[] data = new String[2];
+                    data[0] = id;
+                    data[1] = transID;
+
+                    PutData putData = new PutData("http://cashflow.it.maranatha.edu/services/service_delete_transaction.php", "POST", field, data);
+                    if (putData.startPut()) {
+                        if (putData.onComplete()) {
+                            String result = putData.getResult();
+                            String ErrCode = "1";
+                            String ErrMsg = "Error Connect to Internet";
+                            JSONArray mJsonArray = null;
+                            try {
+                                mJsonArray = new JSONArray(result);
+                                JSONObject mJsonObject = mJsonArray.getJSONObject(0);
+                                ErrCode = mJsonObject.getString("ErrCode");
+                                ErrMsg = mJsonObject.getString("ErrMsg");
+                                showDialog(ErrMsg);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            Log.i("PutData", result);
                         }
-                        Toast.makeText(getApplicationContext(), ErrMsg, Toast.LENGTH_SHORT).show();
-                        Log.i("PutData", result);
                     }
-                }
-                if(putData.onComplete()){
-                    showDialog("Delete");
-                }
+                };
             };
-        };
-        runnable.run();
+            runnable.run();
+
     }
 
 
@@ -377,6 +377,45 @@ public class History extends AppCompatActivity {
 
         // menampilkan alert dialog
         alertDialog.show();
+
+    }
+
+    public Boolean showAlert(String message)
+    {
+        action = false;
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+        // Setting Dialog Title
+        alertDialog.setTitle(getString(R.string.app_name));
+
+        // Setting Dialog Message
+        alertDialog.setMessage(message);
+
+        // Setting Icon to Dialog
+
+        // Setting Positive "Yes" Button
+        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog,int which) {
+                // Write your code here to invoke YES event
+                action = true;
+            }
+        });
+
+        // Setting Negative "NO" Button
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Write your code here to invoke NO event
+                action = false;
+                dialog.cancel();
+
+            }
+        });
+
+        // Showing Alert Message
+        alertDialog.show();
+        System.out.println(action);
+        return action;
     }
 
     public void clearData() {

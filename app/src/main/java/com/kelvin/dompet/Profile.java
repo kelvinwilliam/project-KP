@@ -50,13 +50,12 @@ public class Profile extends AppCompatActivity {
                         try {
                             mJsonArray = new JSONArray(result);
                             JSONObject mJsonObject = mJsonArray.getJSONObject(0);
+                            String uId = mJsonObject.getString("uId");
                             String name = mJsonObject.getString("uName");
                             String email = mJsonObject.getString("uEmail");
-                            String trans = mJsonObject.getString("sumTrans");
-                            String cat = mJsonObject.getString("sumCat");
                             binding.pName.setText(name);
                             binding.pEmail.setText(email);
-                            binding.pJoinSince.setText(id.substring(0,4) + " - " + id.substring(4,6) + " - " + id.substring(6,8));
+                            binding.pJoinSince.setText(uId.substring(0,4) + " - " + monthformat(uId.substring(4,6)) + " - " + uId.substring(6,8));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -114,6 +113,49 @@ public class Profile extends AppCompatActivity {
             createNewDialog();
         });
     }
+
+    private String monthformat(String substring) {
+        String month = null;
+        switch (substring){
+            case "01":
+                month = "Jan";
+                break;
+            case "02":
+                month = "Feb";
+                break;
+            case "03":
+                month = "Mar";
+                break;
+            case "04":
+                month = "Apr";
+                break;
+            case "05":
+                month = "Mei";
+                break;
+            case "06":
+                month = "Jun";
+                break;
+            case "07":
+                month = "Jul";
+                break;
+            case "08":
+                month = "Agu";
+                break;
+            case "09":
+                month = "Sep";
+                break;
+            case "10":
+                month = "Okt";
+                break;
+            case "11":
+                month = "Nov";
+                break;
+            case "12":
+                month = "Des";
+                break;
+        }
+        return month;
+    };
 
     @Override
     protected void onStart() {
