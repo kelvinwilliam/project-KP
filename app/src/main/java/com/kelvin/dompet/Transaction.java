@@ -139,28 +139,14 @@ public class Transaction extends AppCompatActivity {
 
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
-                /**
-                 * Method ini dipanggil saat kita selesai memilih tanggal di DatePicker
-                 */
-
-                /**
-                 * Set Calendar untuk menampung tanggal yang dipilih
-                 */
                 Calendar newDate = Calendar.getInstance();
                 newDate.set(year, monthOfYear, dayOfMonth);
 
-                /**
-                 * Update TextView dengan tanggal yang kita pilih
-                 */
                 showDate.setText( dateFormatter.format(newDate.getTime()));
             }
 
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
 
-        /**
-         * Tampilkan DatePicker dialog
-         */
         datePickerDialog.show();
     }
 
@@ -169,6 +155,7 @@ public class Transaction extends AppCompatActivity {
         super.onStart();
         Bundle bundle = getIntent().getExtras();
         if(bundle.getString("tId")!=null && !bundle.isEmpty()) {
+            binding.add.setText("EDIT");
             id = bundle.getString("id");
             tId = bundle.getString("tId");
             tAmount = bundle.getString("tAmount");
@@ -211,43 +198,48 @@ public class Transaction extends AppCompatActivity {
 
         cvSend.setOnClickListener(v -> {
             String catName = pcName.getText().toString();
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    String[] field = new String[4];
-                    field[0] = "userId";
-                    field[1] = "catName";
-                    field[2] = "catType";
-                    field[3] = "jenis";
-                    //Creating array for data
-                    String[] data = new String[4];
-                    data[0] = id;
-                    data[1] = catName;
-                    data[2] = typeCat;
-                    data[3] = "user";
+            if(!(typeCat == null)){
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        String[] field = new String[4];
+                        field[0] = "userId";
+                        field[1] = "catName";
+                        field[2] = "catType";
+                        field[3] = "jenis";
+                        //Creating array for data
+                        String[] data = new String[4];
+                        data[0] = id;
+                        data[1] = catName;
+                        data[2] = typeCat;
+                        data[3] = "user";
 
-                    PutData putData = new PutData("http://cashflow.it.maranatha.edu/services/service_add_category.php", "POST", field, data);
-                    if (putData.startPut()) {
-                        if (putData.onComplete()) {
-                            String result = putData.getResult();
-                            JSONArray mJsonArray = null;
-                            String ErrMsg = "Error Connect to Internet";
-                            try {
-                                mJsonArray = new JSONArray(result);
-                                JSONObject mJsonObject = mJsonArray.getJSONObject(0);
-                                ErrMsg = mJsonObject.getString("ErrMsg");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                        PutData putData = new PutData("http://cashflow.it.maranatha.edu/services/service_add_category.php", "POST", field, data);
+                        if (putData.startPut()) {
+                            if (putData.onComplete()) {
+                                String result = putData.getResult();
+                                JSONArray mJsonArray = null;
+                                String ErrMsg = "Fail Connect to Web Service";
+                                try {
+                                    mJsonArray = new JSONArray(result);
+                                    JSONObject mJsonObject = mJsonArray.getJSONObject(0);
+                                    ErrMsg = mJsonObject.getString("ErrMsg");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                Toast.makeText(getApplicationContext(), ErrMsg, Toast.LENGTH_SHORT).show();
+
+                                Log.i("PutData", result);
                             }
-                            Toast.makeText(getApplicationContext(), ErrMsg, Toast.LENGTH_SHORT).show();
-
-                            Log.i("PutData", result);
                         }
+                        //End Write and Read data with URL
                     }
-                    //End Write and Read data with URL
-                }
-            });
+                });
+            } else {
+                Toast.makeText(getApplicationContext(), "Choose category type", Toast.LENGTH_SHORT).show();
+            }
+
             dialog.dismiss();
         });
     }
@@ -351,57 +343,62 @@ public class Transaction extends AppCompatActivity {
     }
 
     private void handletrans(){
-        transAmount = binding.ammount.getText().toString();
-        transDate = binding.showdate.getText().toString();
-        transCId = category.getId() ;
-        transDesc = binding.dsc.getText().toString();
+        if(!(typeCat==null)){
+            transAmount = binding.ammount.getText().toString();
+            transDate = binding.showdate.getText().toString();
+            transCId = category.getId() ;
+            transDesc = binding.dsc.getText().toString();
 
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                String[] field = new String[6];
-                field[0] = "userId";
-                field[1] = "transAmount";
-                field[2] = "transDate";
-                field[3] = "transDesc";
-                field[4] = "transPhoto";
-                field[5] = "transCId";
+            if(!transCId.isEmpty() && !transAmount.isEmpty() && !transDate.isEmpty()){
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        String[] field = new String[6];
+                        field[0] = "userId";
+                        field[1] = "transAmount";
+                        field[2] = "transDate";
+                        field[3] = "transDesc";
+                        field[4] = "transPhoto";
+                        field[5] = "transCId";
 
-                //Creating array for data
-                String[] data = new String[6];
-                data[0] = id;
-                data[1] = transAmount;
-                data[2] = transDate;
-                data[3] = transDesc;
-                data[4] = transPhoto;
-                data[5] = transCId;
+                        //Creating array for data
+                        String[] data = new String[6];
+                        data[0] = id;
+                        data[1] = transAmount;
+                        data[2] = transDate;
+                        data[3] = transDesc;
+                        data[4] = transPhoto;
+                        data[5] = transCId;
 
-                PutData putData = new PutData("http://cashflow.it.maranatha.edu/services/service_add_transaction.php", "POST", field, data);
-                if (putData.startPut()) {
-                    if (putData.onComplete()) {
-                        String result = putData.getResult();
-                        String ErrCode = "1";
-                        String ErrMsg = "Error Connect to Internet";
-                        String id = "";
-                        JSONArray mJsonArray = null;
-                        try {
-                            mJsonArray = new JSONArray(result);
-                            JSONObject mJsonObject = mJsonArray.getJSONObject(0);
-                            ErrCode = mJsonObject.getString("ErrCode");
-                            ErrMsg = mJsonObject.getString("ErrMsg");
+                        PutData putData = new PutData("http://cashflow.it.maranatha.edu/services/service_add_transaction.php", "POST", field, data);
+                        if (putData.startPut()) {
+                            if (putData.onComplete()) {
+                                String result = putData.getResult();
+                                String ErrMsg = "Fail Connect to Web Service";
+                                JSONArray mJsonArray = null;
+                                try {
+                                    mJsonArray = new JSONArray(result);
+                                    JSONObject mJsonObject = mJsonArray.getJSONObject(0);
+                                    ErrMsg = mJsonObject.getString("ErrMsg");
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                Toast.makeText(getApplicationContext(), ErrMsg, Toast.LENGTH_SHORT).show();
+
+                                Log.i("PutData", result);
+                            }
                         }
-                        Toast.makeText(getApplicationContext(), ErrMsg, Toast.LENGTH_SHORT).show();
-
-                        Log.i("PutData", result);
+                        //End Write and Read data with URL
                     }
-                }
-                //End Write and Read data with URL
+                });
+            } else {
+                Toast.makeText(getApplicationContext(), "Category, Amount, Date are required", Toast.LENGTH_SHORT).show();
             }
-        });
+        } else {
+            Toast.makeText(getApplicationContext(), "Category, Amount, Date are required", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void handleedit(String transID){
@@ -410,54 +407,58 @@ public class Transaction extends AppCompatActivity {
         transCId = category.getId() ;
         transDesc = binding.dsc.getText().toString();
 
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                String[] field = new String[7];
-                field[0] = "userId";
-                field[1] = "transEditId";
-                field[2] = "transEditAmount";
-                field[3] = "transEditDate";
-                field[4] = "transEditDesc";
-                field[5] = "transEditPhoto";
-                field[6] = "transEditCId";
+        if(!transCId.isEmpty() && !transAmount.isEmpty() && !transDate.isEmpty()){
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    String[] field = new String[7];
+                    field[0] = "userId";
+                    field[1] = "transEditId";
+                    field[2] = "transEditAmount";
+                    field[3] = "transEditDate";
+                    field[4] = "transEditDesc";
+                    field[5] = "transEditPhoto";
+                    field[6] = "transEditCId";
 
-                //Creating array for data
-                String[] data = new String[7];
-                data[0] = id;
-                data[1] = transID;
-                data[2] = transAmount;
-                data[3] = transDate;
-                data[4] = transDesc;
-                data[5] = transPhoto;
-                data[6] = transCId;
+                    //Creating array for data
+                    String[] data = new String[7];
+                    data[0] = id;
+                    data[1] = transID;
+                    data[2] = transAmount;
+                    data[3] = transDate;
+                    data[4] = transDesc;
+                    data[5] = transPhoto;
+                    data[6] = transCId;
 
-                PutData putData = new PutData("http://cashflow.it.maranatha.edu/services/service_update_transaction.php", "POST", field, data);
-                if (putData.startPut()) {
-                    if (putData.onComplete()) {
-                        String result = putData.getResult();
-                        String ErrCode = "1";
-                        String ErrMsg = "Error Connect to Internet";
-                        String id = "";
-                        JSONArray mJsonArray = null;
-                        try {
-                            mJsonArray = new JSONArray(result);
-                            JSONObject mJsonObject = mJsonArray.getJSONObject(0);
-                            ErrCode = mJsonObject.getString("ErrCode");
-                            ErrMsg = mJsonObject.getString("ErrMsg");
+                    if(!(typeCat ==null) && !transAmount.isEmpty() && !transDate.isEmpty()){
+                        PutData putData = new PutData("http://cashflow.it.maranatha.edu/services/service_update_transaction.php", "POST", field, data);
+                        if (putData.startPut()) {
+                            if (putData.onComplete()) {
+                                String result = putData.getResult();
+                                String ErrMsg = "Fail Connect to Web Service";
+                                JSONArray mJsonArray = null;
+                                try {
+                                    mJsonArray = new JSONArray(result);
+                                    JSONObject mJsonObject = mJsonArray.getJSONObject(0);
+                                    ErrMsg = mJsonObject.getString("ErrMsg");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                Toast.makeText(getApplicationContext(), ErrMsg, Toast.LENGTH_SHORT).show();
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                                Log.i("PutData", result);
+                            }
                         }
-                        Toast.makeText(getApplicationContext(), ErrMsg, Toast.LENGTH_SHORT).show();
-
-                        Log.i("PutData", result);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Category, Amount, Date are required", Toast.LENGTH_SHORT).show();
                     }
+
                 }
-                //End Write and Read data with URL
-            }
-        });
+            });
+        } else {
+            Toast.makeText(getApplicationContext(), "Category, Amount, Date are required", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private String uploadImagetoServer(String jenis) {
@@ -590,7 +591,7 @@ public class Transaction extends AppCompatActivity {
     }
 
     public void getCate(String jenis2){
-
+                typeCat = "";
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.removeCallbacksAndMessages(null);
                 handler.post(new Runnable() {

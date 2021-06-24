@@ -21,6 +21,14 @@
             android:text="History"
             android:textSize="24sp" />
 
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:text="From Date" />
+
         <EditText
             android:id="@+id/fromdate"
             android:layout_width="match_parent"
@@ -31,6 +39,14 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:hint="From date" />
+
+        <TextView
+            android:id="@+id/textView26"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:text="Until Date" />
 
         <EditText
             android:id="@+id/fromdate2"

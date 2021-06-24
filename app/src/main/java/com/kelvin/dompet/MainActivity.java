@@ -110,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
                             String result = putData.getResult();
                             String income = "";
                             String expense = "";
-//                        String id = "";
                             JSONArray mJsonArray = null;
                             try {
                                 mJsonArray = new JSONArray(result);
@@ -152,11 +151,9 @@ public class MainActivity extends AppCompatActivity {
                     field[0] = "userId";
                     field[1] = "jenis";
 
-                    //Creating array for data
                     String[] data = new String[2];
                     data[0] = id;
                     data[1] = "mostCategory";
-
 
                     PutData putData = new PutData("http://cashflow.it.maranatha.edu/services/service_fetch_dashboard.php", "POST", field, data);
                     bars.clear();

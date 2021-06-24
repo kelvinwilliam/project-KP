@@ -52,58 +52,62 @@ public class SignUp extends AppCompatActivity {
                 email = txt_email.getText().toString();
 
                 if(!fullname.equals("") && !password2.equals("") && !password.equals("") && !email.equals("")) {
+                    if(password.equals(password2)){
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                //Starting Write and Read data with URL
+                                //Creating array for parameters
+                                String[] field = new String[5];
+                                field[0] = "jenis";
+                                field[1] = "email";
+                                field[2] = "namaUser";
+                                field[3] = "password";
+                                field[4] = "confirmPassword";
+                                //Creating array for data
+                                String[] data = new String[5];
+                                data[0] = "register";
+                                data[1] = email;
+                                data[2] = fullname;
+                                data[3] = password;
+                                data[4] = password2;
+                                PutData putData = new PutData("http://cashflow.it.maranatha.edu/services/service_authenticate.php", "POST", field, data);
+                                if (putData.startPut()) {
+                                    if (putData.onComplete()) {
+                                        String result = putData.getResult();
+                                        String ErrCode = "1";
+                                        String ErrMsg = "Fail Connect to Web Service";
+                                        JSONArray mJsonArray = null;
+                                        try {
+                                            mJsonArray = new JSONArray(result);
+                                            JSONObject mJsonObject = mJsonArray.getJSONObject(0);
+                                            ErrCode = mJsonObject.getString("ErrCode");
+                                            if(ErrCode.equals("0")){
 
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            //Starting Write and Read data with URL
-                            //Creating array for parameters
-                            String[] field = new String[5];
-                            field[0] = "jenis";
-                            field[1] = "email";
-                            field[2] = "namaUser";
-                            field[3] = "password";
-                            field[4] = "confirmPassword";
-                            //Creating array for data
-                            String[] data = new String[5];
-                            data[0] = "register";
-                            data[1] = email;
-                            data[2] = fullname;
-                            data[3] = password;
-                            data[4] = password2;
-                            PutData putData = new PutData("http://cashflow.it.maranatha.edu/services/service_authenticate.php", "POST", field, data);
-                            if (putData.startPut()) {
-                                if (putData.onComplete()) {
-                                    String result = putData.getResult();
-                                    String ErrCode = "1";
-                                    String ErrMsg = "Error Connect to Internet";
-                                    JSONArray mJsonArray = null;
-                                    try {
-                                        mJsonArray = new JSONArray(result);
-                                        JSONObject mJsonObject = mJsonArray.getJSONObject(0);
-                                        ErrCode = mJsonObject.getString("ErrCode");
-                                        if(ErrCode.equals("0")){}
-                                        else{ ErrMsg = mJsonObject.getString("ErrMsg");}
+                                            }
+                                            else{ ErrMsg = mJsonObject.getString("ErrMsg");}
 
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                        if(ErrCode.equals("0")){
+                                            Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                                            startActivity(intent);
+                                            finish();
+                                        }else {
+                                            Toast.makeText(getApplicationContext(), ErrMsg, Toast.LENGTH_SHORT).show();
+                                        }
+                                        Log.i("PutData", result);
                                     }
-                                    if(ErrCode.equals("0")){
-                                        Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }else {
-                                        Toast.makeText(getApplicationContext(), ErrMsg, Toast.LENGTH_SHORT).show();
-                                    }
-
-                                    Log.i("PutData", result);
                                 }
+                                //End Write and Read data with URL
                             }
-                            //End Write and Read data with URL
-                        }
-                    });
+                        });
+                    } else {
+                        Toast.makeText(getApplicationContext(),"Those password didn't match",Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(getApplicationContext(),"All Field Required",Toast.LENGTH_SHORT).show();
                 }

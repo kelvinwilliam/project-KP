@@ -184,7 +184,6 @@ public class History extends AppCompatActivity {
                 if (putData.startPut()) {
                     if (putData.onComplete()) {
                         String result = putData.getResult();
-
                         try {
                             arrayList.clear();
                             JSONArray mJsonArray = new JSONArray(result);
@@ -223,10 +222,9 @@ public class History extends AppCompatActivity {
                                         deleteTransaction(position);
                                     }
 
-
                                 });
                             } else {
-                                Toast.makeText(History.this, "Tidak ada data", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(History.this, "No data Available", Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

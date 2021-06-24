@@ -71,38 +71,44 @@ public class Profile extends AppCompatActivity {
             String nameedit = binding.pName.getText().toString();
             String emailedit = binding.pEmail.getText().toString();
 
-            Handler handler2 = new Handler(Looper.getMainLooper());
-            handler2.post(new Runnable() {
-                @Override
-                public void run() {
-                    String[] field = new String[3];
-                    field[0] = "userId";
-                    field[1] = "uName";
-                    field[2] = "uEmail";
-                    //Creating array for data
-                    String[] data = new String[3];
-                    data[0] = id;
-                    data[1] = nameedit;
-                    data[2] = emailedit;
+            if(!nameedit.isEmpty() && !emailedit.isEmpty()){
+                Handler handler2 = new Handler(Looper.getMainLooper());
+                handler2.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        String[] field = new String[3];
+                        field[0] = "userId";
+                        field[1] = "uName";
+                        field[2] = "uEmail";
+                        //Creating array for data
+                        String[] data = new String[3];
+                        data[0] = id;
+                        data[1] = nameedit;
+                        data[2] = emailedit;
 
-                    PutData putData = new PutData("http://cashflow.it.maranatha.edu/services/service_update_profile.php", "POST", field, data);
-                    if (putData.startPut()) {
-                        if (putData.onComplete()) {
-                            String result = putData.getResult();
-                            JSONArray mJsonArray = null;
-                            try {
-                                mJsonArray = new JSONArray(result);
-                                JSONObject mJsonObject = mJsonArray.getJSONObject(0);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                        PutData putData = new PutData("http://cashflow.it.maranatha.edu/services/service_update_profile.php", "POST", field, data);
+                        if (putData.startPut()) {
+                            if (putData.onComplete()) {
+                                String result = putData.getResult();
+                                JSONArray mJsonArray = null;
+                                String ErrMsg = "Fail Connect to Web Service";
+                                try {
+                                    mJsonArray = new JSONArray(result);
+                                    JSONObject mJsonObject = mJsonArray.getJSONObject(0);
+                                    ErrMsg = mJsonObject.getString("ErrMsg");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                Toast.makeText(getApplicationContext(), ErrMsg, Toast.LENGTH_SHORT).show();
+                                Log.i("PutData", result);
                             }
-
-                            Log.i("PutData", result);
                         }
+                        //End Write and Read data with URL
                     }
-                    //End Write and Read data with URL
-                }
-            });
+                });
+            } else {
+                Toast.makeText(this, "All Field Required", Toast.LENGTH_SHORT).show();
+            }
         });
 
         binding.cvlogout.setOnClickListener(v -> {
@@ -186,43 +192,47 @@ public class Profile extends AppCompatActivity {
             String newpass = pNew.getText().toString();
             String confirmpass = pConfirm.getText().toString();
 
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    String[] field = new String[4];
-                    field[0] = "userId";
-                    field[1] = "oldPassword";
-                    field[2] = "newPassword";
-                    field[3] = "confirmPassword";
-                    //Creating array for data
-                    String[] data = new String[4];
-                    data[0] = id;
-                    data[1] = oldpass;
-                    data[2] = newpass;
-                    data[3] = confirmpass;
+            if(newpass.equals(confirmpass)){
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        String[] field = new String[4];
+                        field[0] = "userId";
+                        field[1] = "oldPassword";
+                        field[2] = "newPassword";
+                        field[3] = "confirmPassword";
+                        //Creating array for data
+                        String[] data = new String[4];
+                        data[0] = id;
+                        data[1] = oldpass;
+                        data[2] = newpass;
+                        data[3] = confirmpass;
 
-                    PutData putData = new PutData("http://cashflow.it.maranatha.edu/services/service_update_password.php", "POST", field, data);
-                    if (putData.startPut()) {
-                        if (putData.onComplete()) {
-                            String result = putData.getResult();
-                            JSONArray mJsonArray = null;
-                            String ErrMsg = "Error Connect to Internet";
-                            try {
-                                mJsonArray = new JSONArray(result);
-                                JSONObject mJsonObject = mJsonArray.getJSONObject(0);
-                                ErrMsg = mJsonObject.getString("ErrMsg");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                        PutData putData = new PutData("http://cashflow.it.maranatha.edu/services/service_update_password.php", "POST", field, data);
+                        if (putData.startPut()) {
+                            if (putData.onComplete()) {
+                                String result = putData.getResult();
+                                JSONArray mJsonArray = null;
+                                String ErrMsg = "Fail Connect to Web Service";
+                                try {
+                                    mJsonArray = new JSONArray(result);
+                                    JSONObject mJsonObject = mJsonArray.getJSONObject(0);
+                                    ErrMsg = mJsonObject.getString("ErrMsg");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                Toast.makeText(getApplicationContext(), ErrMsg, Toast.LENGTH_SHORT).show();
+
+                                Log.i("PutData", result);
                             }
-                            Toast.makeText(getApplicationContext(), ErrMsg, Toast.LENGTH_SHORT).show();
-
-                            Log.i("PutData", result);
                         }
+                        //End Write and Read data with URL
                     }
-                    //End Write and Read data with URL
-                }
-            });
+                });
+            } else {
+                Toast.makeText(getApplicationContext(), "New password and confirm password didn't match", Toast.LENGTH_SHORT).show();
+            }
             dialog.dismiss();
         });
     }

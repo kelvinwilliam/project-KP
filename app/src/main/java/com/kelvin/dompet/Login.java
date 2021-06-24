@@ -80,7 +80,7 @@ public class Login extends AppCompatActivity {
                                 if (putData.onComplete()) {
                                     String result = putData.getResult();
                                     String ErrCode = "1";
-                                    String ErrMsg = "Error Connect to Internet";
+                                    String ErrMsg = "Sorry your account was incorrect";
                                     String id = "";
                                     JSONArray mJsonArray = null;
                                     try {
@@ -144,7 +144,6 @@ public class Login extends AppCompatActivity {
         dialog.show();
 
         CardView cvSend = popup_forget.findViewById(R.id.cvSend);
-
 
         cvSend.setOnClickListener(v -> {
 //            String oldpass = pOld.getText().toString();
