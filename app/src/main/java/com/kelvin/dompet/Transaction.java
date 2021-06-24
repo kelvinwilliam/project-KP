@@ -198,7 +198,7 @@ public class Transaction extends AppCompatActivity {
 
         cvSend.setOnClickListener(v -> {
             String catName = pcName.getText().toString();
-            if(!(typeCat == null)){
+            if(!(typeCat == null) && !typeCat.isEmpty()){
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable() {
                     @Override
@@ -463,11 +463,10 @@ public class Transaction extends AppCompatActivity {
 
     private String uploadImagetoServer(String jenis) {
         final String[] fileName = {""};
-        if (encodeImage!=null) {
+        if (encodeImage!=null && checker()) {
             StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    Toast.makeText(Transaction.this, response.toString(), Toast.LENGTH_SHORT).show();
                     JSONArray mJsonArray = null;
                     try {
                         JSONObject mJsonObject = new JSONObject(response);
@@ -486,7 +485,7 @@ public class Transaction extends AppCompatActivity {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(Transaction.this, error.toString(), Toast.LENGTH_SHORT).show();
+
                 }
             }) {
                 @Nullable
@@ -647,6 +646,9 @@ public class Transaction extends AppCompatActivity {
 
     }
 
+    private Boolean checker(){
+        return (!(transCId ==null) && !transAmount.isEmpty() && !transDate.isEmpty());
+    }
 //    public int getIndex(ArrayList<Category> spinner,String s){
 //        for(int i=0; i<spinner.size(); i++){
 //            if(spinner.get(i).getId().equalsIgnoreCase(s)){

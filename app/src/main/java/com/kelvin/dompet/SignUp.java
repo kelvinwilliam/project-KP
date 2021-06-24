@@ -92,7 +92,7 @@ public class SignUp extends AppCompatActivity {
                                             e.printStackTrace();
                                         }
                                         if(ErrCode.equals("0")){
-                                            Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(),"Account successfully registered",Toast.LENGTH_SHORT).show();
                                             Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                                             startActivity(intent);
                                             finish();

@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -163,11 +164,13 @@ public class MainActivity extends AppCompatActivity {
                             JSONArray mJsonArray = null;
                             try {
                                 mJsonArray = new JSONArray(result);
+                                System.out.println(mJsonArray.length());
                                 for (int i = 0; i < mJsonArray.length(); i++) {
                                     JSONObject mJsonObject = mJsonArray.getJSONObject(i);
                                     bars.add(new BarEntry(i, Integer.parseInt(mJsonObject.getString("mostCat"))));
                                     labels.add(mJsonObject.getString("cName"));
                                 }
+                                System.out.println(labels);
                                 BarDataSet barDataSet = new BarDataSet(bars, "");
                                 barDataSet.setColor(Color.rgb(255, 123, 126));
                                 barDataSet.setValueTextColor(Color.BLACK);
@@ -178,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
                                 binding.barChart.setFitBars(true);
                                 binding.barChart.setData(barData);
                                 binding.barChart.getDescription().setText("");
+                                binding.barChart.getXAxis().setGranularity(1f);
                                 binding.barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
                                 binding.barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
 
