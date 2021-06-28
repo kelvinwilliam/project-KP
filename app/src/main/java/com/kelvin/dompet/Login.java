@@ -146,47 +146,43 @@ public class Login extends AppCompatActivity {
         CardView cvSend = popup_forget.findViewById(R.id.cvSend);
 
         cvSend.setOnClickListener(v -> {
-//            String oldpass = pOld.getText().toString();
-//            String newpass = pNew.getText().toString();
-//            String confirmpass = pConfirm.getText().toString();
+            String email = pfEmail.getText().toString();
 
-//            Handler handler = new Handler(Looper.getMainLooper());
-//            handler.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    String[] field = new String[4];
-//                    field[0] = "userId";
-//                    field[1] = "oldPassword";
-//                    field[2] = "newPassword";
-//                    field[3] = "confirmPassword";
-//                    //Creating array for data
-//                    String[] data = new String[4];
-//                    data[0] = id;
-//                    data[1] = oldpass;
-//                    data[2] = newpass;
-//                    data[3] = confirmpass;
-//
-//                    PutData putData = new PutData("http://cashflow.it.maranatha.edu/services/service_update_password.php", "POST", field, data);
-//                    if (putData.startPut()) {
-//                        if (putData.onComplete()) {
-//                            String result = putData.getResult();
-//                            JSONArray mJsonArray = null;
-//                            String ErrMsg = "Error Connect to Internet";
-//                            try {
-//                                mJsonArray = new JSONArray(result);
-//                                JSONObject mJsonObject = mJsonArray.getJSONObject(0);
-//                                ErrMsg = mJsonObject.getString("ErrMsg");
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//                            Toast.makeText(getApplicationContext(), ErrMsg, Toast.LENGTH_SHORT).show();
-//
-//                            Log.i("PutData", result);
-//                        }
-//                    }
-//                    //End Write and Read data with URL
-//                }
-//            });
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    String[] field = new String[3];
+                    field[0] = "jenis";
+                    field[1] = "userId";
+                    field[2] = "emailUser";
+                    //Creating array for data
+                    String[] data = new String[3];
+                    data[0] = "unlock";
+                    data[1] = "0";
+                    data[2] = email;
+
+                    PutData putData = new PutData("http://cashflow.it.maranatha.edu/services/service_lock_logout.php", "POST", field, data);
+                    if (putData.startPut()) {
+                        if (putData.onComplete()) {
+                            String result = putData.getResult();
+                            JSONArray mJsonArray = null;
+                            String ErrMsg = "Failed Connect to Web Service";
+                            try {
+                                mJsonArray = new JSONArray(result);
+                                JSONObject mJsonObject = mJsonArray.getJSONObject(0);
+                                ErrMsg = mJsonObject.getString("ErrMsg");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            Toast.makeText(getApplicationContext(), ErrMsg, Toast.LENGTH_SHORT).show();
+
+                            Log.i("PutData", result);
+                        }
+                    }
+                    //End Write and Read data with URL
+                }
+            });
             dialog.dismiss();
         });
     }

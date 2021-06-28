@@ -52,6 +52,7 @@ public class History extends AppCompatActivity {
     Bundle bundle = new Bundle();
     String From,Until;
     boolean action;
+    boolean checker = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -219,7 +220,9 @@ public class History extends AppCompatActivity {
 
                                     @Override
                                     public void onDeleteClick(int position) {
-                                        deleteTransaction(position);
+                                        if(showAlert("delete",position)){
+
+                                        }
                                     }
 
                                 });
@@ -319,7 +322,7 @@ public class History extends AppCompatActivity {
                                 JSONObject mJsonObject = mJsonArray.getJSONObject(0);
                                 ErrCode = mJsonObject.getString("ErrCode");
                                 ErrMsg = mJsonObject.getString("ErrMsg");
-                                showDialog(ErrMsg);
+                                Toast.makeText(History.this, ErrMsg, Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -378,24 +381,18 @@ public class History extends AppCompatActivity {
 
     }
 
-    public Boolean showAlert(String message)
+    public Boolean showAlert(String message,int position)
     {
         action = false;
-
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-
-        // Setting Dialog Title
         alertDialog.setTitle(getString(R.string.app_name));
-
-        // Setting Dialog Message
         alertDialog.setMessage(message);
-
-        // Setting Icon to Dialog
-
-        // Setting Positive "Yes" Button
         alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int which) {
                 // Write your code here to invoke YES event
+                deleteTransaction(position);
+                clearData();
+                checker = true;
                 action = true;
             }
         });
@@ -404,15 +401,14 @@ public class History extends AppCompatActivity {
         alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // Write your code here to invoke NO event
+                checker = true;
                 action = false;
                 dialog.cancel();
-
             }
         });
 
         // Showing Alert Message
         alertDialog.show();
-        System.out.println(action);
         return action;
     }
 
